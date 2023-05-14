@@ -45,7 +45,7 @@ class User:
         return json.dumps(self.to_safe_json())
 
     @classmethod
-    def from_dict(cls, datadict, encrypt_password: bool = False, update_role: bool = False):
+    def from_dict(cls, datadict, encrypt_password: bool = False, update_role: bool = True):
         obj = cls()
         all_fields = cls.all_fields()
         if not update_role:

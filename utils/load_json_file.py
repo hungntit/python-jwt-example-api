@@ -50,7 +50,7 @@ def delete_data(file_name: str, id_value: str, id_field: str):
     store_list = []
     for json_obj in json_list:
         if json_obj.get(id_field) != id_value:
-            store_list.append(json_list)
+            store_list.append(json_obj)
     json_object = json.dumps(store_list, indent=4)
     with open(file_path, "w") as outfile:
         outfile.write(json_object)

@@ -1,0 +1,10 @@
+[
+    {
+        "username": "admin@email.com",
+        "password": "$2b$12$RVSxi6/gAWJhFaJzVPoJYO5LXp5/mTvhxxBKWQ2/J6dNxptRgNPEq",
+        "fullname": "Admin",
+        "birthday": "03-03-1988",
+        "roles": ["admin"],
+        "id": "a777aaac-5957-4bfb-aa6e-89f0102dad03"
+    }
+]

@@ -30,3 +30,14 @@ def init(app):
     def get_user(user_id: str):
         user = User.load_by_id(user_id)
         return jsonify(user), 200
+
+    @app.route('/api/users/<user_id>', methods=['DELETE'])
+    @auth_guard('admin')
+    def delete_user(user_id: str):
+        user = User.load_by_id(user_id)
+        if user:
+            user.delete()
+            return jsonify(user.to_safe_json()), 200
+        else:
+            return jsonify({}), 200
+

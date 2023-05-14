@@ -9,3 +9,9 @@ python3 -m venv $VENV_PATH
 $VENV_PATH/bin/pip install -r requirements.txt
 $VENV_PATH/bin/python app.py
 ```
+
+Admin:
+```
+username: "admin@email.com"
+password: "password123!"
+```

@@ -9,10 +9,10 @@ def init(app):
     @app.route('/api/shops', methods=['POST'])
     def create_shop_by_user():
         try:
-            login = check_jwt()
+            login_user_data = check_jwt()
         except Exception as e:
             return jsonify({"message": f'{e}', "status": 401}), 401
-        user_id = login['id']
+        user_id = login_user_data['id']
         json_data: dict = request.json
         error_msg = Shop.validate_error(json_data, created=True)
         if error_msg:
@@ -26,11 +26,14 @@ def init(app):
     @app.route('/api/shops/<shop_id>', methods=['PUT'])
     def update_shop_by_user(shop_id):
         try:
-            login = check_jwt()
+            login_user_data = check_jwt()
         except Exception as e:
             return jsonify({"message": f'{e}', "status": 401}), 401
-        user_id = login['id']
-        shop = Shop.load_by_id(user_id, shop_id)
+        user_id = login_user_data['id']
+        if 'admin' in login_user_data['roles']:
+            shop = Shop.load_by_id_with_admin_role(shop_id)
+        else:
+            shop = Shop.load_by_id(user_id, shop_id)
         if not shop:
             return jsonify({}), 404
         json_data: dict = request.json
@@ -44,11 +47,14 @@ def init(app):
     @app.route('/api/shops/<shop_id>', methods=['PATCH'])
     def patch_update_shop_by_user(shop_id):
         try:
-            login = check_jwt()
+            login_user_data = check_jwt()
         except Exception as e:
             return jsonify({"message": f'{e}', "status": 401}), 401
-        user_id = login['id']
-        shop = Shop.load_by_id(user_id, shop_id)
+        user_id = login_user_data['id']
+        if 'admin' in login_user_data['roles']:
+            shop = Shop.load_by_id_with_admin_role(shop_id)
+        else:
+            shop = Shop.load_by_id(user_id, shop_id)
         if not shop:
             return jsonify({}), 404
         json_data: dict = request.json
@@ -59,11 +65,14 @@ def init(app):
     @app.route('/api/shops/<shop_id>', methods=['DELETE'])
     def delete_shop_of_user(shop_id):
         try:
-            login = check_jwt()
+            login_user_data: dict = check_jwt()
         except Exception as e:
             return jsonify({"message": f'{e}', "status": 401}), 401
-        user_id = login['id']
-        shop = Shop.load_by_id(user_id, shop_id)
+        user_id = login_user_data['id']
+        if 'admin' in login_user_data['roles']:
+            shop = Shop.load_by_id_with_admin_role(shop_id)
+        else:
+            shop = Shop.load_by_id(user_id, shop_id)
         if shop:
             shop.delete()
             return jsonify(shop.to_safe_json()), 200
@@ -73,20 +82,20 @@ def init(app):
     @app.route('/api/shops', methods=['GET'])
     def get_all_shops_for_user():
         try:
-            login = check_jwt()
+            login_user_data = check_jwt()
         except Exception as e:
             return jsonify({"message": f'{e}', "status": 401}), 401
-        user_id = login['id']
+        user_id = login_user_data['id']
         shops = Shop.find_all_by_user_id(user_id)
         return jsonify({"shops": [shop.to_safe_json() for shop in shops]}), 200
 
     @app.route('/api/shops/<shop_id>', methods=['GET'])
     def load_shop_of_user(shop_id):
         try:
-            login = check_jwt()
+            login_user_data = check_jwt()
         except Exception as e:
             return jsonify({"message": f'{e}', "status": 401}), 401
-        user_id = login['id']
+        user_id = login_user_data['id']
         shop = Shop.load_by_id(user_id, shop_id)
         if shop:
             return jsonify(shop.to_safe_json()), 200

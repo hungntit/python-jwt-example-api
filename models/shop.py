@@ -60,6 +60,14 @@ class Shop:
         return result
 
     @classmethod
+    def load_by_id_with_admin_role(cls, shop_id: str):
+        shops = cls.load_data(filtered_condition={'id': shop_id})
+        result: Optional[Shop] = None
+        if shops:
+            result = shops[0]
+        return result
+
+    @classmethod
     def required_fields(cls):
         return ['name', 'address']
 
